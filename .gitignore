@@ -2,3 +2,7 @@
 *.sh
 bin/
 src/ref
+.DS_Store
+*.swp
+*.swo
+covet
