@@ -1,0 +1,4 @@
+*.exe
+*.sh
+bin/
+src/ref
