@@ -1,5 +1,5 @@
-import os, strutils, parseutils
-import sdl2/sdl, sdl2/sdl_image
+import strutils, parseutils
+import sdl2/sdl
 import misc
 
 const Clear = Color()
@@ -7,7 +7,7 @@ const White = Color(r: 255, g: 255, b: 255, a: 255)
 type
   BDFGlyph* = ref BDFGlyphObj
   BDFGlyphObj = object
-    bitmap: Surface
+    bitmap*: Surface
     box: Rect
     code: uint16
     dwidth: int
@@ -29,19 +29,24 @@ proc glyph*(font: BDFFont, index: uint16): BDFGlyph {.inline.} = font.glyphs[ind
 proc destroy*(font: BDFFont)
 
 proc createGlyph(font: BDFFont, code: uint16, hexseq: seq[string], box: Rect, dw: int)
+proc w*(glyph: BDFGlyph): int {.inline.} = glyph.box.w 
+proc h*(glyph: BDFGlyph): int {.inline.} = glyph.box.h 
+proc x*(glyph: BDFGlyph): int {.inline.} = glyph.box.x 
+proc y*(glyph: BDFGlyph): int {.inline.} = glyph.box.y 
+proc dw*(glyph: BDFGlyph): int {.inline.} = glyph.dwidth 
 proc destroy(glyph: BDFGlyph) {.inline.} = free(glyph.bitmap)
 
 #func imple
 proc loadBDFFont*(path: string): BDFFont =
   new result
   
+  var code, dw: int
+  var box: Rect
   let file = open(path)
   while not endOfFile(file):
     var data = file.readLine().split()
     for i,d in data: data[i] = d.multiReplace(("\"", ""))
    
-    var code, dw: int
-    var box: Rect
     case data[0]:
     of "FACE_NAME": result.name = data[1]
     of "FONT_DESCENT": result.descent = parseInt data[1]
@@ -68,6 +73,7 @@ proc loadBDFFont*(path: string): BDFFont =
         let line = file.readLine()
         if line != "ENDCHAR": hexseq.add(line)
         else:
+          if code < 0: code = uint16.high.int + code
           result.createGlyph(code.uint16, hexseq, box, dw)
           break
 
@@ -95,7 +101,7 @@ proc createGlyph(font: BDFFont, code: uint16, hexseq: seq[string], box: Rect, dw
   
   unlockSurface(bitmap)
   
-  #var glyph = new BDFGlyph
-  var glyph = BDFGlyph(bitmap: bitmap, box: box, code: code, dwidth: dw)
+  var glyph = new BDFGlyph
+  glyph = BDFGlyph(bitmap: bitmap, box: box, code: code, dwidth: dw)
   font.glyphs[code] = glyph
 

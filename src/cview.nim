@@ -5,7 +5,7 @@ import misc
 type
   View* = object
     window: Window
-    surface: Surface
+    surface*: Surface
 
 proc createView*(): View =
   result.window = createWindow("covet", WindowPosUndefined, WindowPosUndefined, 600, 500, WINDOW_BORDERLESS or WINDOW_SHOWN)
