@@ -1,6 +1,6 @@
 import os
 import sdl2/sdl
-import engine, cview, timing, input, misc
+import engine, cview, input, misc
 
 import font
 
