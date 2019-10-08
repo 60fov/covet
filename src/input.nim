@@ -14,6 +14,10 @@ proc handle*(event: Event) =
     of Quit: stop()
     of KeyDown:
       var key = event.key.keysym.sym
+      if key == K_Escape:
+        var e: Event
+        e.kind = Quit
+        discard pushEvent(e.addr)
       #echo key
     else: discard
 

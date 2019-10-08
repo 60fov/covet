@@ -47,7 +47,8 @@ proc fin() =
 proc run() =
   var event: Event
   while running:
-    LOG_SDL waitEvent(event.addr)
+    discard waitEvent(event.addr)
+    #echo "event"
     eventproc(event)
     updateproc(0) #TODO: remove delta
   fin()
