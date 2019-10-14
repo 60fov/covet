@@ -27,6 +27,8 @@ proc loadBDFFont*(path: string): BDFFont
 proc name*(font: BDFFont): string {.inline.} = font.name
 proc glyph*(font: BDFFont, index: uint16): BDFGlyph {.inline.} = font.glyphs[index]
 proc destroy*(font: BDFFont)
+proc w*(font: BDFFont): int {.inline.} = font.box.w 
+proc h*(font: BDFFont): int {.inline.} = font.box.h
 
 proc createGlyph(font: BDFFont, code: uint16, hexseq: seq[string], box: Rect, dw: int)
 proc w*(glyph: BDFGlyph): int {.inline.} = glyph.box.w 

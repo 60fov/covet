@@ -4,8 +4,6 @@ import strformat, strutils
 
 type
   LineBuffer* = ref object
-    prev: LineBuffer
-    next: LineBuffer
     data: string
     gs: int
     ge: int

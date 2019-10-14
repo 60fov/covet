@@ -1,13 +1,16 @@
 import os
 import sdl2/sdl
-import engine, cview, input, misc
+import engine, cview, input, misc, renderer
 
-import font
+import font, buffermap
 
 var view: View
 var lemon: BDFFont
 
-#FUNC DECL
+# VARS
+var map: BufferMap
+
+# FUNC DECL
 proc init(): bool
 proc fin()
 
@@ -16,17 +19,25 @@ proc update(delta: float)
 # FUNC IMPLE
 proc init(): bool =
   result = true
-  view = createView()
-  lemon = loadBDFFont("res"/"fonts"/"lemon.bdf")
 
+  view = createView()
+  view.setBorder(4, 0xbbff22)
+  view.setPadding(25)
+  view.background = 0x000000
+
+  lemon = loadBDFFont("res"/"fonts"/"lemon.bdf")
+  map = createBufferMap("test")
+  map.load("res"/"zen_life.txt")
+  
 proc fin() =
   destroy(lemon)
   destroy(view)
 
 proc update(delta: float) =
-  var glyph = lemon.glyph('a'.uint16)
-  var dst = Rect(x: 100,y: 100, w: glyph.w, h: glyph.h)
-  LOG_SDL blitSurface(glyph.bitmap, nil, view.surface, dst.addr)
+
+  view.renderDecor()
+  view.render(map, lemon)
+
   refresh(view)
 
 when isMainModule:
